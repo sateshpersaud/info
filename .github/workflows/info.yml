@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - run: |
-          curl "$MEDIA_URL" --output media --no-progress-meter
+          curl --globoff "$MEDIA_URL" --output media --no-progress-meter
           sudo apt-get update > /dev/null
           sudo apt-get install ffmpeg > /dev/null
           ffprobe -v quiet -print_format json -show_format -show_streams media
