@@ -1,8 +1,7 @@
 on: workflow_dispatch
 
 env:
-  MEDIA_URL: https://nw4.seedr.cc/ff_get/893077333/www.TamilBlasters.uk%20-%20The%20Falcon%20and%20the%20Winter%20Soldier%20(2021)%20[Season%201%20EP-2%20-%201080p%20HD%20AVC%20-%20[Tamil%20%20Telugu%20%20Hindi%20%20Eng]%20-%20x264%20-%20DDP5.1%20(192%20Kbps)%20-%201.3GB%20-%20ESubs].mkv?st=6oaYyUunJy397UtorAg1bw&e=1618605257
-
+  MEDIA_URL: https://nl22.seedr.cc/ff_get/894451831/falcon1.mkv?st=HHq5l01Gi-2-MlHrwYgeFQ&e=1618773804
 jobs:
   get-media-info:
     name: Get Media Info
@@ -10,7 +9,7 @@ jobs:
 
     steps:
       - run: |
-          curl --globoff "$MEDIA_URL" --output media --no-progress-meter
+          curl "$MEDIA_URL" --output media --no-progress-meter
           sudo apt-get update > /dev/null
           sudo apt-get install ffmpeg > /dev/null
           ffprobe -v quiet -print_format json -show_format -show_streams media
