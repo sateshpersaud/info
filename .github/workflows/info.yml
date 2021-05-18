@@ -1,15 +1,24 @@
 on: workflow_dispatch
 
-env:
-  MEDIA_URL: https://nl22.seedr.cc/ff_get/894451831/falcon1.mkv?st=HHq5l01Gi-2-MlHrwYgeFQ&e=1618773804
 jobs:
   get-media-info:
-    name: Get Media Info
+    name: Test
     runs-on: ubuntu-20.04
 
     steps:
       - run: |
-          curl "$MEDIA_URL" --output media --no-progress-meter
           sudo apt-get update > /dev/null
-          sudo apt-get install ffmpeg > /dev/null
-          ffprobe -v quiet -print_format json -show_format -show_streams media
+          sudo apt-get install build-essential > /dev/null
+          https://gitlab.com/ecodis/exhale/-/archive/v1.1.5/exhale-v1.1.5.tar.gz
+          tar xvf exhale-v1.1.5.tar.gz && cd exhale-v1.1.5
+          make BUILD32=0 release
+          sudo cp -v bin/exhale /usr/local/bin
+          exhale | head -n 6
+          wget http://samples.mplayerhq.hu/A-codecs/lossless/luckynight.wav.bz2
+          bunzip2 -v luckynight.wav.bz2
+          exhale 3 luckynight.wav luckynight_USAC.m4a
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: luckynight_USAC
+          path: luckynight_USAC.m4a
