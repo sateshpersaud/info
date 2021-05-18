@@ -17,6 +17,7 @@ jobs:
           wget http://samples.mplayerhq.hu/A-codecs/lossless/luckynight.wav.bz2
           bunzip2 -v luckynight.wav.bz2
           exhale 3 luckynight.wav luckynight_USAC.m4a
+          ls
       - name: Artifact
         uses: actions/upload-artifact@v2
         with:
