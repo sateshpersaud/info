@@ -34,10 +34,10 @@ mkdir --parents /opt/ffmpeg/sources /opt/ffmpeg/build /opt/ffmpeg/bin
 export PATH="/opt/ffmpeg/bin:$PATH"
 export PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig
 
-cd /opt/ffmpeg/sources && \
-git -C nasm pull 2>/dev/null || git clone --depth 1 https://github.com/netwide-assembler/nasm.git && \
-cd nasm && \
-./autogen.sh && \
-PATH="/opt/ffmpeg/bin:$PATH" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin && \
-make && \
+cd /opt/ffmpeg/sources
+git -C nasm pull 2>/dev/null || git clone --depth 1 https://github.com/netwide-assembler/nasm.git
+cd nasm
+./autogen.sh
+PATH="/opt/ffmpeg/bin:$PATH" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
+PATH="/opt/ffmpeg/bin:$PATH" make
 make install
