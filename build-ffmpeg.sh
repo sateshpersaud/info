@@ -16,8 +16,6 @@ apt-get --assume-yes --no-install-recommends --quiet install \
   build-essential \
   cmake \
   git-core \
-  libass-dev \
-  libfreetype6-dev \
   libgnutls28-dev \
   libtool \
   meson \
@@ -29,60 +27,31 @@ apt-get --assume-yes --no-install-recommends --quiet install \
   zlib1g-dev \
   libunistring-dev
 
-mkdir -p ~/ffmpeg_sources ~/bin
+mkdir --parents /opt/ffmpeg/sources /opt/ffmpeg/build /opt/ffmpeg/bin
 
-cd ~/ffmpeg_sources &&
-  wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2 &&
-  tar xjvf nasm-2.15.05.tar.bz2 &&
-  cd nasm-2.15.05 &&
-  ./autogen.sh &&
-  PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" &&
-  make &&
-  make install
+export PATH="/opt/ffmpeg/bin:$PATH"
+export PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig
 
-cd ~/ffmpeg_sources &&
-  git -C x264 pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git &&
-  cd x264 &&
-  PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic &&
-  PATH="$HOME/bin:$PATH" make &&
-  make install
+cd /opt/ffmpeg/sources
+git -C nasm pull 2>/dev/null || git clone --depth 1 https://github.com/netwide-assembler/nasm.git
+cd nasm
+./autogen.sh
+./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
+make
+make install
 
-cd ~/ffmpeg_sources &&
-  git -C fdk-aac pull 2>/dev/null || git clone --depth 1 https://github.com/mstorsjo/fdk-aac &&
-  cd fdk-aac &&
-  autoreconf -fiv &&
-  ./configure --prefix="$HOME/ffmpeg_build" --disable-shared &&
-  make &&
-  make install
-
-cd ~/ffmpeg_sources &&
-  git -C opus pull 2>/dev/null || git clone --depth 1 https://github.com/xiph/opus.git &&
-  cd opus &&
-  ./autogen.sh &&
-  ./configure --prefix="$HOME/ffmpeg_build" --disable-shared &&
-  make &&
-  make install
-
-cd ~/ffmpeg_sources &&
-  wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 &&
-  tar xjvf ffmpeg-snapshot.tar.bz2 &&
-  cd ffmpeg &&
-  PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-    --prefix="$HOME/ffmpeg_build" \
-    --pkg-config-flags="--static" \
-    --extra-cflags="-I$HOME/ffmpeg_build/include" \
-    --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-    --extra-libs="-lpthread -lm" \
-    --ld="g++" \
-    --bindir="$HOME/bin" \
-    --enable-gpl \
-    --enable-gnutls \
-    --enable-libass \
-    --enable-libfdk-aac \
-    --enable-libfreetype \
-    --enable-libopus \
-    --enable-libx264 \
-    --enable-nonfree &&
-  PATH="$HOME/bin:$PATH" make &&
-  make install &&
-  hash -r
+cd /opt/ffmpeg/sources
+git -C x264 pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git
+cd x264
+./configure \
+  --prefix=/opt/ffmpeg/build \
+  --bindir=/opt/ffmpeg/bin \
+  --enable-static \
+  --enable-pic \
+  --disable-cli \
+  --disable-bashcompletion \
+  --disable-interlaced \
+  --bit-depth=8 \
+  --chroma-format=420
+make
+make install
