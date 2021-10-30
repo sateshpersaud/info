@@ -35,10 +35,26 @@ export PATH="/opt/ffmpeg/bin:$PATH"
 export PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig
 
 cd /opt/ffmpeg/sources
-wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2 && \
-tar xjvf nasm-2.15.05.tar.bz2 && \
-cd nasm-2.15.05 && \
+wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2
+tar xjvf nasm-2.15.05.tar.bz2
+cd nasm-2.15.05
 ./autogen.sh
 PATH="/opt/ffmpeg/bin:$PATH" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
+make
+make install
+
+cd /opt/ffmpeg/sources
+git -C x264 pull 2>/dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git
+cd x264
+PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./configure \
+  --prefix=/opt/ffmpeg/build \
+  --bindir=/opt/ffmpeg/bin \
+  --enable-static \
+  --enable-pic \
+  --disable-cli \
+  --disable-bashcompletion \
+  --disable-interlaced \
+  --bit-depth=8 \
+  --chroma-format=420
 PATH="/opt/ffmpeg/bin:$PATH" make
 make install
