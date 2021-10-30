@@ -36,6 +36,7 @@ cd /opt/ffmpeg/sources
 git -C nasm pull 2>/dev/null || git clone --depth 1 https://github.com/netwide-assembler/nasm.git
 cd nasm
 ./autogen.sh
+PATH="/opt/ffmpeg/bin:$PATH"
 ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
 make
 make install
