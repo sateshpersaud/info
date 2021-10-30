@@ -10,4 +10,4 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Build
-        run: sudo ./build-ffmpeg.sh
+        run: ./build-ffmpeg.sh
