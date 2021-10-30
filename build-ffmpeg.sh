@@ -35,8 +35,9 @@ export PATH="/opt/ffmpeg/bin:$PATH"
 export PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig
 
 cd /opt/ffmpeg/sources
-git -C nasm pull 2>/dev/null || git clone --depth 1 https://github.com/netwide-assembler/nasm.git
-cd nasm
+wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2 && \
+tar xjvf nasm-2.15.05.tar.bz2 && \
+cd nasm-2.15.05 && \
 ./autogen.sh
 PATH="/opt/ffmpeg/bin:$PATH" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
 PATH="/opt/ffmpeg/bin:$PATH" make
