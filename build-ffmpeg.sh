@@ -48,7 +48,6 @@ PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./c
   --prefix=/opt/ffmpeg/build \
   --bindir=/opt/ffmpeg/bin \
   --enable-static \
-  --enable-pic \
   --disable-cli \
   --disable-bashcompletion \
   --disable-interlaced \
@@ -95,9 +94,12 @@ PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./c
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libopus \
-  --enable-libsrt \
   --enable-libx264 \
   --enable-libxml2 \
-  --disable-debug
+  --disable-debug \
+  --enable-hardcoded-tables
 PATH="/opt/ffmpeg/bin:$PATH" make
 make install
+
+cd /opt/ffmpeg/bin
+ls -l
