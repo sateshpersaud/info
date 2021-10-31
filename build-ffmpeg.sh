@@ -17,8 +17,6 @@ apt-get --assume-yes --no-install-recommends --quiet install \
   cmake \
   git-core \
   libass-dev \
-  libfreetype6-dev \
-  libgnutls28-dev \
   libtool \
   meson \
   ninja-build \
@@ -56,5 +54,50 @@ PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./c
   --disable-interlaced \
   --bit-depth=8 \
   --chroma-format=420
+PATH="/opt/ffmpeg/bin:$PATH" make
+make install
+
+cd /opt/ffmpeg/sources
+git -C fdk-aac pull 2>/dev/null || git clone --depth 1 https://github.com/mstorsjo/fdk-aac
+cd fdk-aac
+autoreconf -fiv
+./configure --prefix=/opt/ffmpeg/build --disable-shared
+make
+make install
+
+cd /opt/ffmpeg/sources
+git -C opus pull 2>/dev/null || git clone --depth 1 https://github.com/xiph/opus.git
+cd opus
+./autogen.sh
+./configure --prefix=/opt/ffmpeg/build --disable-shared --disable-doc --disable-extra-programs
+make
+make install
+
+cd /opt/ffmpeg/sources
+wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+tar xjvf ffmpeg-snapshot.tar.bz2
+cd ffmpeg
+PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./configure \
+  --prefix=/opt/ffmpeg/build \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I/opt/ffmpeg/build/include" \
+  --extra-ldflags="-L/opt/ffmpeg/build/lib" \
+  --extra-libs="-lpthread -lm" \
+  --ld="g++" \
+  --bindir=/opt/ffmpeg/bin \
+  --enable-gpl \
+  --enable-nonfree \
+  --disable-ffplay \
+  --disable-ffprobe \
+  --disable-doc \
+  --disable-avdevice \
+  --disable-network \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libopus \
+  --enable-libsrt \
+  --enable-libx264 \
+  --enable-libxml2 \
+  --disable-debug
 PATH="/opt/ffmpeg/bin:$PATH" make
 make install
