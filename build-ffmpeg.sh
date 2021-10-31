@@ -16,12 +16,10 @@ apt-get --assume-yes --no-install-recommends --quiet install \
   build-essential \
   cmake \
   git-core \
-  libass-dev \
   libtool \
   meson \
   ninja-build \
   pkg-config \
-  texinfo \
   wget \
   yasm \
   zlib1g-dev \
@@ -36,9 +34,9 @@ cd /opt/ffmpeg/sources
 wget https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2
 tar xjvf nasm-2.15.05.tar.bz2
 cd nasm-2.15.05
-./autogen.sh
-PATH="/opt/ffmpeg/bin:$PATH" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin
-make
+CFLAGS="-march=znver2 -O3" ./autogen.sh
+PATH="/opt/ffmpeg/bin:$PATH" CFLAGS="-march=znver2 -O3" ./configure --prefix=/opt/ffmpeg/build --bindir=/opt/ffmpeg/bin  --enable-lto
+CFLAGS="-march=znver2 -O3" make
 make install
 
 cd /opt/ffmpeg/sources
@@ -47,12 +45,14 @@ cd x264
 PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./configure \
   --prefix=/opt/ffmpeg/build \
   --bindir=/opt/ffmpeg/bin \
+  --extra-cflags="-march=znver2 -O3" \
   --enable-static \
   --disable-cli \
   --disable-bashcompletion \
   --disable-interlaced \
   --bit-depth=8 \
-  --chroma-format=420
+  --chroma-format=420 \
+  --enable-lto
 PATH="/opt/ffmpeg/bin:$PATH" make
 make install
 
@@ -79,7 +79,7 @@ cd ffmpeg
 PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./configure \
   --prefix=/opt/ffmpeg/build \
   --pkg-config-flags="--static" \
-  --extra-cflags="-I/opt/ffmpeg/build/include" \
+  --extra-cflags="-I/opt/ffmpeg/build/include -march=znver2 -O3" \
   --extra-ldflags="-L/opt/ffmpeg/build/lib" \
   --extra-libs="-lpthread -lm" \
   --ld="g++" \
@@ -91,7 +91,6 @@ PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./c
   --disable-doc \
   --disable-avdevice \
   --disable-network \
-  --enable-libass \
   --enable-libfdk-aac \
   --enable-libopus \
   --enable-libx264 \
@@ -100,6 +99,3 @@ PATH="/opt/ffmpeg/bin:$PATH" PKG_CONFIG_PATH=/opt/ffmpeg/build/lib/pkgconfig ./c
   --enable-hardcoded-tables
 PATH="/opt/ffmpeg/bin:$PATH" make
 make install
-
-cd /opt/ffmpeg/bin
-ls -l
